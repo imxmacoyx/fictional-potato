@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Dimensions, Alert} from 'react-native';
 import * as ExpoLocation from 'expo-location';
 import Constants from 'expo-constants';
+import MapView from 'react-native-maps';
 
 export default function Location() {
-  const setLocation = async() => {
+  
+  const setLocation = async () => {
     const { status } = await ExpoLocation.requestPermissionsAsync();
-    if (status == 'granted'){
-      return Alert.alert('no tenemos los permisos necesarios para acceder a la localización');
+    if (status !== 'granted') {
+      return Alert.alert('No tenemos los permisos necesarios para acceder a la localización');
     }
-    const location  = await ExpoLocation.getCurrentPositionAsync({});
-    console.log(location);
+    const location = await ExpoLocation.getCurrentPositionAsync({});
+    console.warn(location);
   }
 
   useEffect( () => {
@@ -19,12 +21,16 @@ export default function Location() {
 
   return (
     <View style= {StyleSheet.container}>
-      
+      <MapView style={style.map} />
     </View>
   );
 }
 
 const style = StyleSheet.create({
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
   container:{
     flex:1,
     backgroundColor:'#fff',
